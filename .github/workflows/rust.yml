@@ -29,18 +29,20 @@ jobs:
         rustup target add wasm32-unknown-unknown
     - name: building...
       run: |
-        ./trunk build --release
+        # dummy thick test
+        mkdir dist/
+        touch dist/boas dist/gang
+        # ./trunk build --release
     - name: moving files and switching branches   
       run: |
         echo copying files...
         cp dist /tmp -r
-        echo switching branches and cleaning...
         git checkout gh-pages
         find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r
-        echo copying back the files...
         cp /tmp/dist/* .
     - name:  updating repo...
       run: |
+        git status
         git add -A
         git commit -am "update"
         git push
