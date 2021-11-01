@@ -14,5 +14,3 @@ yew = "*"
 yew_styles = { version="*", features=["button", "text", "navbar", "forms"] }
 
 # to interact with things like localstorage
-gloo-storage = "0.2.0"
-gloo = "*"
