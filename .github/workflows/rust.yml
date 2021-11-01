@@ -11,10 +11,7 @@ env:
 
 jobs:
   ghpages:
-    name: compile and test
-    runs-on: ubuntu-latest
-
-    name: move to gh-pages branch
+    name: setup gh-pages branch
     runs-on: ubuntu-latest
     steps:
     - name: install dependency and build
