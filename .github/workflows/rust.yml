@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: setup repo and git
       uses: actions/checkout@v2
-        with:
+      with:
           fetch-depth: 0
     - name: config git
       run: |
