@@ -15,23 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: setup repo and git
-    - uses: actions/checkout@v2
-      with:
+      uses: actions/checkout@v2
+        with:
           fetch-depth: 0
     - name: config git
-    - run: |
+      run: |
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
     - name: Downloading dependencies and updating...
-    - run: |
+      run: |
         wget -qO- https://github.com/thedodd/trunk/releases/download/v0.14.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
         rustup update
         rustup target add wasm32-unknown-unknown
     - name: building...
-    - run: |
+      run: |
         ./trunk build --release
     - name: moving files and switching branches   
-    - run: |
+      run: |
         echo copying files...
         cp dist /tmp -r
         echo switching branches and cleaning...
@@ -40,7 +40,7 @@ jobs:
         echo copying back the files...
         cp /tmp/dist/* .
     - name:  updating repo...
-    - run: |
+      run: |
         git add -A
         git commit -am "update"
         git push
