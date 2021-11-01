@@ -14,19 +14,17 @@ jobs:
     name: setup gh-pages branch
     runs-on: ubuntu-latest
     steps:
-    - name: install dependency and build
-      run: |
+    - uses: actions/checkout@v2
+    - run: |
         git clone git@github.com:OnikenX/lok2-web.git
         cargo install trunk
         trunk build --release
-    - name: copy, switch, delete and update
-      run: |
-        cp dist /tmp -r &&
-        git checkout gh-pages &&
-        find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r &&
-        cp /tmp/dist/* . &&
-        git add -A &&
-        git commit -am "update" &&
+        cp dist /tmp -r
+        git checkout gh-pages
+        find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r
+        cp /tmp/dist/* .
+        git add -A
+        git commit -am "update"
         git push
       
     
