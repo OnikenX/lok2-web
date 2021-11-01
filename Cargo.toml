@@ -1,0 +1,18 @@
+[package]
+name = "lok2-web"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lok2 = {git = "https://github.com/onikenx/lok2", branch = "main"}
+
+# for the interface
+yew = "*"
+# for interations
+yew_styles = { version="*", features=["button", "text", "navbar", "forms"] }
+
+# to interact with things like localstorage
+gloo-storage = "0.2.0"
+gloo = "*"
