@@ -10,30 +10,25 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  ghpages:
     name: compile and test
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
-  move:
     name: move to gh-pages branch
     runs-on: ubuntu-latest
     steps:
-    - name: Install dependecies
+    - name: install dependency and build
       run: |
-        git branch gh-pages
-        cargo install trunk &&                                                                                        ─╯
-        trunk build --release &&
+        cargo install trunk
+        trunk build --release
+    - name: copy, switch, delete and update
+      run: |
         cp dist /tmp -r &&
         git checkout gh-pages &&
-        find . -maxdepth 1 -not -name .git;
-        cp /tmp/dist/* . 
-        git add -A
-        git commit -am "update"
+        find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r &&
+        cp /tmp/dist/* . &&
+        git add -A &&
+        git commit -am "update" &&
+        git push
       
     
