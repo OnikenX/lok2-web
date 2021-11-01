@@ -12,5 +12,3 @@ lok2 = {git = "https://github.com/onikenx/lok2", branch = "main"}
 yew = "*"
 # for interations
 yew_styles = { version="*", features=["button", "text", "navbar", "forms"] }
-
-# to interact with things like localstorage

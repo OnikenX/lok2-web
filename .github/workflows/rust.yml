@@ -14,11 +14,10 @@ jobs:
     name: setup gh-pages branch
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+    - name: setup repo and git
     - uses: actions/checkout@v2
       with:
           fetch-depth: 0
-    - name: setup git
     - run: |
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
