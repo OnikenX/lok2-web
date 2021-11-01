@@ -14,8 +14,14 @@ jobs:
     name: setup gh-pages branch
     runs-on: ubuntu-latest
     steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.CI_TOKEN }}
     - name: install dependency and build
       run: |
+        git clone git@github.com:OnikenX/lok2-web.git
         cargo install trunk
         trunk build --release
     - name: copy, switch, delete and update
