@@ -1,15 +1,25 @@
 use lok2::LokType;
-use yew::{ Component, ComponentLink, Html,  events::{FocusEvent, KeyboardEvent}, html};
-use yew_styles::{button::{Button}, forms::{form_input::{FormInput, InputType},form_textarea::FormTextArea}, styles::{Palette, Size, Style}};
 use yew::InputData;
+use yew::{
+    events::{FocusEvent, KeyboardEvent},
+    html, Component, ComponentLink, Html,
+};
+use yew_styles::{
+    button::Button,
+    forms::{
+        form_input::{FormInput, InputType},
+        form_textarea::FormTextArea,
+    },
+    styles::{Palette, Size, Style},
+};
 
 pub enum Msg {
     ToggleTranslation,
     ToggleCompression,
-    Input(String)
+    Input(String),
 }
 
-enum LokTranslation{
+enum LokTranslation {
     Lok2Utf8,
     Utf8_2Lok,
 }
@@ -17,9 +27,22 @@ enum LokTranslation{
 pub struct Model {
     input: String,
     output: String,
-    compression : LokType,
-    lok_translation : LokTranslation,
+    compression: LokType,
+    lok_translation: LokTranslation,
     link: ComponentLink<Self>,
+}
+
+impl Model {
+    pub fn translate(&mut self) {
+        let compression = self.compression.clone();
+        self.output = match self.lok_translation {
+            LokTranslation::Lok2Utf8 => match lok2::from_lok_to_string(self.input.clone(), compression) {
+                Ok(r) => r,
+                Err(_) => "".to_string(),
+            },
+            LokTranslation::Utf8_2Lok => lok2::from_string_to_lok(self.input.clone(), compression),
+        };
+    }
 }
 
 impl Component for Model {
@@ -28,42 +51,39 @@ impl Component for Model {
     type Properties = ();
 
     fn create(props: Self::Properties, link: yew::ComponentLink<Self>) -> Self {
-        Model{input: "".to_string(), output: "".to_string(), compression: LokType::Uncompressed , lok_translation: LokTranslation::Utf8_2Lok, link }
+        Model {
+            input: "".to_string(),
+            output: "".to_string(),
+            compression: LokType::Uncompressed,
+            lok_translation: LokTranslation::Utf8_2Lok,
+            link,
+        }
     }
 
     fn update(&mut self, msg: Self::Message) -> yew::ShouldRender {
-        match msg {
+        let returner = match msg {
             Msg::ToggleCompression => {
-                self.compression = match self.compression{
+                self.compression = match self.compression {
                     LokType::Compressed => LokType::Uncompressed,
                     LokType::Uncompressed => LokType::Compressed,
                 };
                 true
             }
             Msg::ToggleTranslation => {
-                self.lok_translation = match self.lok_translation{
+                self.lok_translation = match self.lok_translation {
                     LokTranslation::Lok2Utf8 => LokTranslation::Utf8_2Lok,
                     LokTranslation::Utf8_2Lok => LokTranslation::Lok2Utf8,
                 };
+                self.translate();
                 true
-            },
+            }
             Msg::Input(text) => {
-                self.input = text.clone();
-                let compression = self.compression.clone();
-                self.output = match self.lok_translation {
-                     LokTranslation::Lok2Utf8 => {
-                        match lok2::from_lok_to_string(text.clone(), compression ){
-                            Ok(r) => r,
-                            Err(_) => "".to_string(),
-                        }
-                    }
-                    ,
-                    LokTranslation::Utf8_2Lok => lok2::from_string_to_lok(text.clone(), compression),
-                };
-                
+                self.input = text;
                 true
-            },
-        }
+            }
+        };
+        self.translate();
+        returner
     }
 
     fn change(&mut self, _props: Self::Properties) -> yew::ShouldRender {
@@ -71,17 +91,17 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
-        let lok_translation = match self.lok_translation{
+        let lok_translation = match self.lok_translation {
             LokTranslation::Lok2Utf8 => "Lok => UTF-8",
             LokTranslation::Utf8_2Lok => "Lok <= UTF-8",
         };
 
-        let lok_compressed = match self.compression{
+        let lok_compressed = match self.compression {
             LokType::Compressed => "Compressed",
             LokType::Uncompressed => "Not Compressed",
         };
-        
-        html!{
+
+        html! {
         <div class="view">
             <Button
             onclick_signal=self.link.callback(move |_| Msg::ToggleCompression)
@@ -98,7 +118,7 @@ impl Component for Model {
             button_style=Style::Outline
             button_size=Size::Medium
             >{lok_translation}</Button>
-            
+
             <br/>
 
             <FormTextArea
@@ -108,8 +128,8 @@ impl Component for Model {
             />
             <br/>
             {&self.output}
-            
-        
+
+
         </div>
         }
     }
