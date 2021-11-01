@@ -28,11 +28,7 @@ jobs:
         rustup update
         rustup target add wasm32-unknown-unknown
     - name: building...
-      run: |
-        # dummy thick test
-        mkdir dist/
-        touch dist/boas dist/gang
-        # ./trunk build --release
+      run: ./trunk build --release
     - name: moving files and switching branches   
       run: |
         echo copying files...
