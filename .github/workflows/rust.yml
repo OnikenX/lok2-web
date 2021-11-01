@@ -27,16 +27,16 @@ jobs:
         wget -qO- https://github.com/thedodd/trunk/releases/download/v0.14.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
         rustup update
         rustup target add wasm32-unknown-unknown
-    - name: building...
+    - name: builds with trunk
       run: ./trunk build --release
-    - name: moving files and switching branches   
+    - name: move files and switch branches  
       run: |
         echo copying files...
         cp dist /tmp -r
         git checkout gh-pages
         find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r
         cp /tmp/dist/* .
-    - name:  updating repo...
+    - name:  updates gh-pages repo
       run: |
         git status
         git add -A
