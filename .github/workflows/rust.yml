@@ -30,7 +30,8 @@ jobs:
     - name: building...
     - run:  |
         ./trunk build --release
-    - name: moving files and switching branches    
+    - name: moving files and switching branches   
+    - run: |
         echo copying files...
         cp dist /tmp -r
         echo switching branches and cleaning...
