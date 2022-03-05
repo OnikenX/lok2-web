@@ -47,7 +47,9 @@ jobs:
         rustup update
         rustup target add wasm32-unknown-unknown
     - name: builds with trunk
-      run: ./trunk build --release
+      run: |
+        echo 'public_url = "./"' >> Trunk.toml
+        ./trunk build --release
     - name: move files and switch branches  
       run: |
         echo copying files...
