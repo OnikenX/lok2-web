@@ -27,6 +27,7 @@ enum LokTranslation {
 pub struct Model {
     input: String,
     output: String,
+    error: String,
     compression: LokType,
     lok_translation: LokTranslation,
     link: ComponentLink<Self>,
@@ -35,13 +36,33 @@ pub struct Model {
 impl Model {
     pub fn translate(&mut self) {
         let compression = self.compression.clone();
+        self.error.clear();
         self.output = match self.lok_translation {
-            LokTranslation::Lok2Utf8 => match lok2::from_lok_to_string(self.input.clone(), compression) {
-                Ok(r) => r,
-                Err(_) => "".to_string(),
-            },
+            LokTranslation::Lok2Utf8 => {
+                match lok2::from_lok_to_string(self.input.clone(), compression) {
+                    Ok(r) => r,
+                    Err(e) => {
+                        self.error = e.to_string();
+                        "".to_string()
+                    }
+                }
+            }
             LokTranslation::Utf8_2Lok => lok2::from_string_to_lok(self.input.clone(), compression),
         };
+    }
+}
+
+impl Model {
+    fn error(&self) -> Html {
+        if !&self.error.is_empty() {
+            html! {
+                <div class="w3-red w3-panel">
+                   {&self.error}
+                </div>
+            }
+        } else {
+            html!()
+        }
     }
 }
 
@@ -54,6 +75,7 @@ impl Component for Model {
         Model {
             input: "".to_string(),
             output: "".to_string(),
+            error: "".to_string(),
             compression: LokType::Uncompressed,
             lok_translation: LokTranslation::Utf8_2Lok,
             link,
@@ -127,6 +149,7 @@ impl Component for Model {
                 textarea_size=Size::Big
             />
             <br/>
+            {self.error()}
             {&self.output}
 
 
