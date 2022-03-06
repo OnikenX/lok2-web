@@ -50,10 +50,12 @@ jobs:
       run: |
         echo 'public_url = "./"' >> Trunk.toml
         ./trunk build --release
+        git restore Trunk.toml
     - name: move files and switch branches  
       run: |
         echo copying files...
         cp dist /tmp -r
+        
         git checkout gh-pages
         find . -maxdepth 1 -not -name .git -not -name . | xargs rm -r
         cp /tmp/dist/* .
